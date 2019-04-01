@@ -1,0 +1,60 @@
+ <!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>滑动解锁</title>
+    <style>
+        *{margin:0;padding: 0;box-sizing: border-box;-webkit-touch-callout: none;-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
+        .outer{position: relative;margin:20px auto;width: 200px;height: 30px;line-height: 28px;border:1px solid #ccc;background: #ccc9c9;}
+        .outer span,.filter-box,.inner{position: absolute;top: 0;left: 0;}
+        .outer span{display: block;padding:0  0 0 36px;width: 100%;height: 100%;color: #fff;text-align: center;}
+        .filter-box{width: 0;height: 100%;background: green;z-index: 9;}
+        .outer.act span{padding:0 36px 0 0;}
+        .inner{width: 36px;height: 28px;text-align: center;background: #fff;cursor: pointer;font-family: "宋体";z-index: 10;font-weight: bold;color: #929292;}
+        .outer.act .inner{color: green;}
+        .outer.act span{z-index: 99;}
+    </style>
+    <script src="jquery-1.11.3.min.js"></script>
+    <script>
+        $(function(){
+            $(".inner").mousedown(function(e){
+                var el = $(".inner"),os = el.offset(),dx,$span=$(".outer>span"),$filter=$(".filter-box"),_differ=$(".outer").width()-el.width();
+                $(document).mousemove(function(e){
+                    dx = e.pageX - os.left;
+                    if(dx<0){
+                        dx=0;
+                    }else if(dx>_differ){
+                        dx=_differ;
+                    }
+                    $filter.css('width',dx);
+                    el.css("left",dx);
+                });
+                $(document).mouseup(function(e){
+                    $(document).off('mousemove');
+                    $(document).off('mouseup');
+                    dx = e.pageX - os.left;
+                    if(dx<_differ){
+                        dx=0;
+                        $span.html("滑动解锁");
+                    }else if(dx>=_differ){
+                        dx=_differ;
+                        $(".outer").addClass("act");
+                        $span.html("验证通过！");
+                        el.html('&radic;');
+                    }
+                    $filter.css('width',dx);
+                    el.css("left",dx);
+
+                })
+            })
+        })
+    </script>
+</head>
+<body>
+    <div class="outer">
+        <div class="filter-box"></div>
+        <span>滑动解锁</span>
+        <div class="inner">&gt;&gt;</div>
+    </div>
+</body>
+<html>
